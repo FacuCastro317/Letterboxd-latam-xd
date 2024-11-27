@@ -55,10 +55,11 @@ def crear_base_de_datos ():
 
     # Crear tabla inscripciones
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS inscripciones (
+    CREATE TABLE IF NOT EXISTS cursado (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         id_alumno INTEGER NOT NULL,
         id_clase INTEGER NOT NULL,
+        nota INTEGER NOT NULL,
         FOREIGN KEY (id_alumno) REFERENCES alumnos(id),
         FOREIGN KEY (id_clase) REFERENCES clases(id)
     )
