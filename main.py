@@ -1,27 +1,101 @@
-import datetime, connector
+import datetime, connector 
+from manip_bd import insertar_datos
 
 connector.crear_base_de_datos()
 
-def agregar_persona(personas):
-    id_usuario = int(input("Ingrese ID de usuario: "))
+def ingresar_datos():
+
+    opcion = input("""Indique qué datos desea ingresar:
+          1- Ingresar alumnos.
+          2- Ingresar profesor.
+          3- Ingresar materia.
+          4- Ingresar clase.
+          5- Ingresar notas.
+          6- Volver.
+          """)
+
+    if opcion == "1":
+        agregar_alumno()
+    elif opcion == "2":
+        agregar_profesor()
+    elif opcion == "3":
+        agregar_materia()
+    elif opcion == "4":
+        agregar_clase()
+    elif opcion == "5":
+        agregar_notas()
+    elif opcion == "6":
+        menu()
+    else:
+        print("Opcion inválida. Por favor intente de nuevo.")
+        ingresar_datos()
+
+def agregar_alumno():
     nombre = input("Ingrese nombre: ")
     apellido = input("Ingrese apellido: ")
     nro_documento = input("Ingrese número de documento: ")
     fecha_nacimiento = input("Ingrese fecha de nacimiento (YYYY-MM-DD): ")
+    correo = input("Ingrese correo: ")
     telefono = input("Ingrese teléfono: ")
-    domicilio = input("Ingrese domicilio: ")
     
-    persona = {
-        "ID": id_usuario,
-        "Nombre": nombre,
-        "Apellido": apellido,
-        "Nro Documento": nro_documento,
-        "Fecha de Nacimiento": datetime.datetime.strptime(fecha_nacimiento, "%Y-%m-%d"),
-        "Teléfono": telefono,
-        "Domicilio": domicilio
-    }
+    alumno = (nombre, apellido, nro_documento, fecha_nacimiento, correo, telefono)
+
+    insertar_datos("alumnos", ["nombre", "apellido", "dni", "fecha_nac", "correo", "telefono"],
+                      alumno)
+    print("Alumno ingresado con éxito.")
+    menu()
     
-    personas.append(persona)
+
+def agregar_profesor():
+    nombre = input("Ingrese nombre: ")
+    apellido = input("Ingrese apellido: ")
+    correo = input ("Ingrese el correo electronico.")
+    telefono = input ("Ingrese el numero de telefono.")
+
+    profesor = (nombre, apellido, correo, telefono)
+
+    insertar_datos("profesores", ["nombre", "apellido", "correo", "telefono"], profesor)
+
+    print("Los datos han sido ingresados.")
+    menu()
+
+def agregar_materia():
+    nombre = input("Ingrese nombre de la materia: ")
+    descripcion = input("Realice una descripcion:")
+
+    materia = (nombre, descripcion)
+
+    insertar_datos("materias", ["nombre", "descripcion"], materia)
+
+    print("Materia registrada con exito.")
+    menu()
+
+
+def agregar_clase():
+    id_materia = int(input("Ingrese el ID de la materia:"))
+    id_profesor = int(input("Ingrese el ID del profesor"))
+    horario = input("Ingrese el horario de cursada")
+
+    clase = (id_materia, id_profesor, horario)
+
+    insertar_datos("clases", ["id_materia", "id_profesor", "horario"], clase)
+
+    print("Clase registrada con éxito.")
+    menu()
+
+
+def agregar_notas():
+    id_alumno = int(input("Ingrese el ID de alumno: "))
+    id_clase = int(input("Ingrese el ID de la clase: "))
+    nota = int(input("Ingrese la nota del alumno (1-10): "))
+
+    cursado = (id_alumno, id_clase, nota)
+
+    insertar_datos("cursado", ["id_alumno", "id_clase", "nota"], cursado)
+
+    print("Nota cargada con exito.")
+    menu()
+
 
 def consultar_personas(personas):
     for persona in personas:
@@ -44,7 +118,6 @@ def listar_personas(personas):
         print(persona)
 
 def menu():
-    personas = []
     while True:
         print("\nMenu:")
         print("1. Ingreso de datos")
@@ -57,7 +130,7 @@ def menu():
         opcion = input("Seleccione una opción: ")
         
         if opcion == "1":
-            agregar_persona(personas)
+            ingresar_datos()
         elif opcion == "2":
             consultar_personas(personas)
         elif opcion == "3":
